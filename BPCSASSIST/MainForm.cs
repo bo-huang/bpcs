@@ -158,8 +158,11 @@ namespace BPCSASSIST
                 String[] dragedFiles = e.Data.GetData(DataFormats.FileDrop, false) as String[];
                 foreach (string file in dragedFiles)
                 {
-                    files.Add(file);
-                    AddFileToList(file);
+                    if (System.IO.File.Exists(file))
+                    {
+                        files.Add(file);
+                        AddFileToList(file);
+                    }
                 }
             }
             catch
