@@ -1,0 +1,17 @@
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\BPCSASSIST.exe.config
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\BPCSASSIST.exe
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\BPCSASSIST.pdb
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\Awesomium.Core.dll
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\Awesomium.Windows.Forms.dll
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\Awesomium.Core.xml
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\Awesomium.Windows.Forms.xml
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\en-US.dll
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\AwesomiumProcess
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\Awesomium.dll
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\icudt42.dll
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.MainForm.resources
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.LoginForm.resources
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.Properties.Resources.resources
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.csproj.GenerateResource.Cache
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.exe
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.pdb
