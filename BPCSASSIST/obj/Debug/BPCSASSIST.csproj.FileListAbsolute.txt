@@ -19,3 +19,4 @@ C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\BPCSASSIST.exe.manifest
 C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\bin\Debug\BPCSASSIST.application
 C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.exe.manifest
 C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.application
+C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Debug\BPCSASSIST.csprojResolveAssemblyReference.cache

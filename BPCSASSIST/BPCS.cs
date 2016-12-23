@@ -118,10 +118,15 @@ namespace BPCSASSIST
                 int segmentID = 0;//当前位于第几段*/
                 using (FileStream fileStream = File.OpenRead(file))
                 {
+                    bool reuplaod = false;//是否是重传
+                    int count=0;//读取的字节数
                     while (fileStream.Position<fileLength)
                     {
-                        //返回读取的字节数 count
-                        int count = fileStream.Read(segmentData, 0, (int)segmentLength);
+                        //返回读取的字节数
+                        if (reuplaod == false)//若是重传就直接使用上次读到的数据
+                            count = fileStream.Read(segmentData, 0, (int)segmentLength);
+                        else
+                            reuplaod = false;
                         /*//新建一个上传任务
                         tasks[segmentID] = Task<string>.Factory.StartNew(() =>
                             {
@@ -129,10 +134,23 @@ namespace BPCSASSIST
                             });
                         ++segmentID;*/
                         string md5 = SegmentUpload(segmentData, count);
-                        if(md5=="")
+                        if(md5=="")//上传失败
                         {
-                            ok = false;
-                            break;
+                            //提示是否从这里开始重传
+                            System.Windows.Forms.DialogResult result =
+                            System.Windows.Forms.MessageBox.Show("Uplaod failed,do you want to try it again?",
+                                "Upload Error", System.Windows.Forms.MessageBoxButtons.YesNo,
+                                System.Windows.Forms.MessageBoxIcon.Information);
+                            if (result == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                reuplaod = true;
+                                continue;
+                            }
+                            else
+                            {
+                                ok = false;
+                                break;
+                            }
                         }
                         md5s.Add(md5);
                     }
@@ -153,6 +171,20 @@ namespace BPCSASSIST
                 {
                     string fileName = System.IO.Path.GetFileName(file).Trim();
                     bool res = Merge(md5s, fileName);
+                    while(res==false)
+                    {
+                        //提示是否重新合并
+                        System.Windows.Forms.DialogResult result =
+                        System.Windows.Forms.MessageBox.Show("Merge failed,do you want to try it again?",
+                            "Merge Error", System.Windows.Forms.MessageBoxButtons.YesNo,
+                            System.Windows.Forms.MessageBoxIcon.Information);
+                        if (result == System.Windows.Forms.DialogResult.Yes)
+                        {
+                            res = Merge(md5s, fileName);
+                        }
+                        else
+                            break;
+                    }
                     return res;
                 }
             }

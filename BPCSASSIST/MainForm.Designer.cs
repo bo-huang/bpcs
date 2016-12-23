@@ -107,16 +107,16 @@
             this.uploadLabel.AutoSize = true;
             this.uploadLabel.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uploadLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.uploadLabel.Location = new System.Drawing.Point(124, 100);
+            this.uploadLabel.Location = new System.Drawing.Point(145, 99);
             this.uploadLabel.Name = "uploadLabel";
-            this.uploadLabel.Size = new System.Drawing.Size(120, 16);
+            this.uploadLabel.Size = new System.Drawing.Size(72, 16);
             this.uploadLabel.TabIndex = 5;
-            this.uploadLabel.Text = "拖曳文件到这里";
+            this.uploadLabel.Text = "拖曳上传";
             // 
             // chooseButton
             // 
             this.chooseButton.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.chooseButton.Location = new System.Drawing.Point(129, 70);
+            this.chooseButton.Location = new System.Drawing.Point(129, 68);
             this.chooseButton.Name = "chooseButton";
             this.chooseButton.Size = new System.Drawing.Size(109, 26);
             this.chooseButton.TabIndex = 4;
