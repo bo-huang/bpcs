@@ -52,7 +52,7 @@ namespace BPCSASSIST
             try
             {
                 HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
-                request.KeepAlive = false;
+                //request.KeepAlive = false;
                 request.Method = "GET"; 
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 using(Stream readStream = response.GetResponseStream())
@@ -65,7 +65,6 @@ namespace BPCSASSIST
                     JObject jo = JObject.Parse(retString);
                     return  System.Web.HttpUtility.UrlDecode(jo["username"].ToString());
                 }
-                
             }
             catch
             {
@@ -178,15 +177,18 @@ namespace BPCSASSIST
             byte[] postData = Encoding.UTF8.GetBytes("param="+jo.ToString());
             HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
             request.Method = "POST";
-            request.KeepAlive = false;
-            //必须加上这个ContentType
+            //request.KeepAlive = false;
+            //必须加上这个ContentType和ContentLength
             request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = postData.Length;
             try
             {
                 using (Stream writeStream = request.GetRequestStream())
                 {
                     //写文件
                     writeStream.Write(postData, 0, postData.Length);
+                    writeStream.Flush();
+                    //request = null;
                 }
                 return true;
             }
@@ -208,9 +210,7 @@ namespace BPCSASSIST
                 string uri = host+"/pcs/file?method=upload&access_token=" + access_token + "&type=tmpfile";
                 HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
                 request.Method = "PUT";//POST老是失败，提示content_type is not exists
-                request.Host = "pcs.baidu.com";
-                request.ContentLength = segmentLength;
-                request.KeepAlive = false;
+                //request.KeepAlive = false;
                 using(Stream writeStream = request.GetRequestStream())
                 {
                     //写文件（这里没有按照官方文档上写的file=）
@@ -224,25 +224,27 @@ namespace BPCSASSIST
                         if (offset + unitSize > segmentLength)
                             actualSize = segmentLength - offset;
                         writeStream.Write(segmentData, offset, actualSize);
-                        writeStream.Flush();
                         offset += unitSize;
                         uploadSize+=actualSize;
                         if (progressEvent != null)
                             progressEvent(uploadSize, fileLength);
                     }
+                    writeStream.Flush();
                 }
                 //返回
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream readStream = response.GetResponseStream();
-                StreamReader myStreamReader = new StreamReader(readStream, Encoding.UTF8);
-                string retString = myStreamReader.ReadToEnd();
-                myStreamReader.Close();
-                response.Close();
-                //使用了第三方库Newtonsoft解析json
-                JObject jo = JObject.Parse(retString);
-                return jo["md5"].ToString();
-                
-                
+
+                using(HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    Stream readStream = response.GetResponseStream();
+                    StreamReader myStreamReader = new StreamReader(readStream, Encoding.UTF8);
+                    string retString = myStreamReader.ReadToEnd();
+                    myStreamReader.Close();
+                    response.Close();
+                    //使用了第三方库Newtonsoft解析json
+                    JObject jo = JObject.Parse(retString);
+                    return jo["md5"].ToString();
+                }
+                //request = null;
             }
             catch
             {
@@ -283,10 +285,11 @@ namespace BPCSASSIST
             {
                 HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
                 request.Method = "GET";
-                request.KeepAlive = false;
+                //request.KeepAlive = false;
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                 }
+                request = null;
             }
             catch 
             {

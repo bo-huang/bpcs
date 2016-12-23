@@ -100,15 +100,15 @@ namespace BPCSASSIST
                 bool ok = bpcs.Upload(file);
                 if (!ok)
                     MessageBox.Show(string.Format("{0} upload fail", System.IO.Path.GetFileName(file)));
-                else
-                    DeleteListItem(file);
+                DeleteListItem(file);
             }
             files.Clear();
             uploadButton.Enabled = true;
         }
         private void Progress(long value ,long maxnum)
         {
-            //防止溢出
+            statusLabel.Text = ((int)(value*100.0 / maxnum)).ToString() + "%";
+            //防止溢出(progressBar int)
             if(maxnum>int.MaxValue)
             {
                 value /= 10;
@@ -116,7 +116,6 @@ namespace BPCSASSIST
             }
             progressBar.Maximum = (int)maxnum;
             progressBar.Value = (int)value;
-            statusLabel.Text = ((int)((double)value/maxnum*100)).ToString() + "%";
         }
         private void DeleteListItem(string file)
         {
