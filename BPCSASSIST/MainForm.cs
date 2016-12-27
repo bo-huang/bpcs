@@ -95,11 +95,20 @@ namespace BPCSASSIST
                 string file = files[i];
                 progressBar.Value = 0;
                 progressBar.Maximum = 100;
-                statusLabel.Text = "";
+                statusLabel.Text = "computing……";
                 bpcs.progressEvent = new BPCS.ProgressEventHander(Progress);
-                bool ok = bpcs.Upload(file);
+                //先尝试利用秒传
+                //如果上传失败，很有可能是百度云上没有找到相同的文件
+                //这个时候用普通方式上传
+                bool ok = bpcs.RapidUpload(file);
+                if(!ok)
+                {    
+                    //普通方式上传
+                    statusLabel.Text = "0%";
+                    ok = bpcs.Upload(file);
+                }
                 if (!ok)
-                    MessageBox.Show(string.Format("{0} upload fail", System.IO.Path.GetFileName(file)));
+                    MessageBox.Show(string.Format("{0} upload failed", System.IO.Path.GetFileName(file)));
                 DeleteListItem(file);
             }
             files.Clear();

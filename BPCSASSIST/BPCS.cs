@@ -11,12 +11,12 @@ namespace BPCSASSIST
 {
     class BPCS
     {
-        private string access_token="";
+        private string access_token = "";
         private const string filePath = "access_token.txt";
         private const string host = "https://pcs.baidu.com/rest/2.0/";
 
         //委托(用于传递进度条信息到MainForm)
-        public delegate void ProgressEventHander(long value,long maxnum);
+        public delegate void ProgressEventHander(long value, long maxnum);
         public ProgressEventHander progressEvent = null;
         private long fileLength;
         private long uploadSize;//已上传的字节
@@ -48,14 +48,14 @@ namespace BPCSASSIST
         /// <returns></returns>
         public string GetUserName()
         {
-            string uri = string.Format("https://openapi.baidu.com/rest/2.0/passport/users/getInfo?access_token={0}",access_token);
+            string uri = string.Format("https://openapi.baidu.com/rest/2.0/passport/users/getInfo?access_token={0}", access_token);
             try
             {
                 HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
                 //request.KeepAlive = false;
-                request.Method = "GET"; 
+                request.Method = "GET";
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                using(Stream readStream = response.GetResponseStream())
+                using (Stream readStream = response.GetResponseStream())
                 {
                     StreamReader myStreamReader = new StreamReader(readStream, Encoding.UTF8);
                     string retString = myStreamReader.ReadToEnd();
@@ -63,7 +63,7 @@ namespace BPCSASSIST
                     response.Close();
                     //使用了第三方库Newtonsoft解析json
                     JObject jo = JObject.Parse(retString);
-                    return  System.Web.HttpUtility.UrlDecode(jo["username"].ToString());
+                    return System.Web.HttpUtility.UrlDecode(jo["username"].ToString());
                 }
             }
             catch
@@ -93,7 +93,7 @@ namespace BPCSASSIST
         /// 暴力的把DefaultConnectionLimit改为100
         /// </summary>
         /// <param name="file"></param>
-        public bool Upload(string file) 
+        public bool Upload(string file)
         {
             //上传前先验证acce_token
             if (!isValidate())
@@ -108,8 +108,8 @@ namespace BPCSASSIST
                 if (fileLength > (1L << 28))//大于256MB（api限制是不超过2GB）
                     segmentLength = 1L << 28;
                 else
-                    segmentLength = (fileLength+1) >> 1;//至少需要2段
-                int segmentCount = (int)((fileLength+segmentLength-1) / segmentLength);
+                    segmentLength = (fileLength + 1) >> 1;//至少需要2段
+                int segmentCount = (int)((fileLength + segmentLength - 1) / segmentLength);
                 //分段读文件并上传  
                 byte[] segmentData = new byte[segmentLength];
                 List<string> md5s = new List<string>();
@@ -119,8 +119,8 @@ namespace BPCSASSIST
                 using (FileStream fileStream = File.OpenRead(file))
                 {
                     bool reuplaod = false;//是否是重传
-                    int count=0;//读取的字节数
-                    while (fileStream.Position<fileLength)
+                    int count = 0;//读取的字节数
+                    while (fileStream.Position < fileLength)
                     {
                         //返回读取的字节数
                         if (reuplaod == false)//若是重传就直接使用上次读到的数据
@@ -134,7 +134,7 @@ namespace BPCSASSIST
                             });
                         ++segmentID;*/
                         string md5 = SegmentUpload(segmentData, count);
-                        if(md5=="")//上传失败
+                        if (md5 == "")//上传失败
                         {
                             //提示是否从这里开始重传
                             System.Windows.Forms.DialogResult result =
@@ -171,7 +171,7 @@ namespace BPCSASSIST
                 {
                     string fileName = System.IO.Path.GetFileName(file).Trim();
                     bool res = Merge(md5s, fileName);
-                    while(res==false)
+                    while (res == false)
                     {
                         //提示是否重新合并
                         System.Windows.Forms.DialogResult result =
@@ -196,17 +196,17 @@ namespace BPCSASSIST
         /// </summary>
         /// <param name="md5s"></param>
         /// <param name="path"></param>
-        private bool Merge(List<string> md5s,string path)
+        private bool Merge(List<string> md5s, string path)
         {
-            string uri = host+"/file?method=createsuperfile&ondup=newcopy&path="
-                + System.Web.HttpUtility.UrlEncode("/apps/UniDrive/"+path, Encoding.UTF8)
+            string uri = host + "/file?method=createsuperfile&ondup=newcopy&path="
+                + System.Web.HttpUtility.UrlEncode("/apps/UniDrive/" + path, Encoding.UTF8)
                 + "&access_token=" + access_token;
             JObject jo = new JObject();
             JArray ja = new JArray();
             foreach (string md5 in md5s)
                 ja.Add(md5);
             jo.Add("block_list", ja);
-            byte[] postData = Encoding.UTF8.GetBytes("param="+jo.ToString());
+            byte[] postData = Encoding.UTF8.GetBytes("param=" + jo.ToString());
             HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
             request.Method = "POST";
             //request.KeepAlive = false;
@@ -234,16 +234,16 @@ namespace BPCSASSIST
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private string SegmentUpload(byte[] segmentData,int segmentLength)
+        private string SegmentUpload(byte[] segmentData, int segmentLength)
         {
             //开始长传
             try
             {
-                string uri = host+"/pcs/file?method=upload&access_token=" + access_token + "&type=tmpfile";
+                string uri = host + "/pcs/file?method=upload&access_token=" + access_token + "&type=tmpfile";
                 HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
                 request.Method = "PUT";//POST老是失败，提示content_type is not exists
                 //request.KeepAlive = false;
-                using(Stream writeStream = request.GetRequestStream())
+                using (Stream writeStream = request.GetRequestStream())
                 {
                     //写文件（这里没有按照官方文档上写的file=）
                     //每次上传4MB，从而获得上传进度
@@ -257,7 +257,8 @@ namespace BPCSASSIST
                             actualSize = segmentLength - offset;
                         writeStream.Write(segmentData, offset, actualSize);
                         offset += unitSize;
-                        uploadSize+=actualSize;
+                        uploadSize += actualSize;
+                        //发送进度
                         if (progressEvent != null)
                             progressEvent(uploadSize, fileLength);
                     }
@@ -265,7 +266,7 @@ namespace BPCSASSIST
                 }
                 //返回
 
-                using(HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     Stream readStream = response.GetResponseStream();
                     StreamReader myStreamReader = new StreamReader(readStream, Encoding.UTF8);
@@ -312,7 +313,7 @@ namespace BPCSASSIST
         /// <returns></returns>
         public bool isValidate()
         {
-            string uri = host+"/pcs/quota?method=info&access_token="+access_token;
+            string uri = host + "/pcs/quota?method=info&access_token=" + access_token;
             try
             {
                 HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
@@ -320,14 +321,111 @@ namespace BPCSASSIST
                 //request.KeepAlive = false;
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                        return true;
                 }
                 request = null;
             }
-            catch 
+            catch
             {
                 return false;
             }
             return true;
+        }
+
+
+        /// <summary>
+        /// 新增秒传接口
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public bool RapidUpload(string file)
+        {
+            //上传前先验证acce_token
+            if (!isValidate())
+                return false;
+            if (!File.Exists(file))
+                return false;
+            //获取文件大小
+            FileInfo fileInfo = new FileInfo(file);
+            fileLength = fileInfo.Length;
+            //秒传文件必须大于256KB
+            if (fileLength > (1 << 18))
+            {
+                using (FileStream fileStream = File.OpenRead(file))
+                {
+                    try
+                    {
+                        byte[] buffer = new byte[1 << 18];
+                        fileStream.Read(buffer, 0, buffer.Length);
+                        string content_md5 = GetMD5HashFromFile(file);
+                        string slice_md5 = GetMD5HashFromArray(buffer);
+                        string fileName = System.IO.Path.GetFileName(file);
+                        string uri = string.Format("{0}/pcs/file?method=rapidupload&ondup=newcopy&access_token={1}&content-length={2}&content-md5={3}&slice-md5={4}&path=%2fapps%2fUniDrive%2f{5}"
+                            ,host,access_token,fileLength,content_md5,slice_md5,fileName);
+                        HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
+                        request.Method = "POST";
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                if (progressEvent != null)
+                                    progressEvent(100, 100);
+                                return true;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// 返回文件的md5值
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private static string GetMD5HashFromFile(string fileName)
+        {
+            try
+            {
+                FileStream fileStream = File.OpenRead(fileName);
+                System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                byte[] retVal = md5.ComputeHash(fileStream);
+                fileStream.Close();
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < retVal.Length; ++i)
+                {
+                    sb.Append(retVal[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
+            catch
+            {
+                return "";
+            }
+        }
+        private static string GetMD5HashFromArray(byte[] buffer)
+        {
+            try
+            {
+                System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                byte[] retVal = md5.ComputeHash(buffer);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < retVal.Length; ++i)
+                {
+                    sb.Append(retVal[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
+            catch
+            {
+                return "";
+            }
         }
     }
 }

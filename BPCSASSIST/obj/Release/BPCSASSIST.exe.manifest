@@ -67,14 +67,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="BPCSASSIST.exe" size="561664">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="BPCSASSIST.exe" size="563200">
       <assemblyIdentity name="BPCSASSIST" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>0HWFjflrmi1oIDn65o09jKuf5xN/u3tseX81i8/04hw=</dsig:DigestValue>
+        <dsig:DigestValue>P87tGmldKqpVBxDvaZfzuunC4Er1Urp+YILqlDr2nJw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
