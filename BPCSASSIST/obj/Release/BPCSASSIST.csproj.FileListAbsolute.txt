@@ -7,3 +7,13 @@ C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Release\BPCSASSIST.Properties
 C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Release\BPCSASSIST.csproj.GenerateResource.Cache
 C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Release\BPCSASSIST.exe
 C:\Users\bohuang\Desktop\BPCSASSIST\BPCSASSIST\obj\Release\BPCSASSIST.pdb
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\bin\Release\BPCSASSIST.exe.config
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\obj\Release\BPCSASSIST.exe
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\obj\Release\BPCSASSIST.pdb
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\bin\Release\BPCSASSIST.exe
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\bin\Release\BPCSASSIST.pdb
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\bin\Release\Newtonsoft.Json.dll
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\obj\Release\BPCSASSIST.csprojResolveAssemblyReference.cache
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\obj\Release\BPCSASSIST.MainForm.resources
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\obj\Release\BPCSASSIST.Properties.Resources.resources
+C:\Users\bohuang\Desktop\bpcs\BPCSASSIST\obj\Release\BPCSASSIST.csproj.GenerateResource.Cache

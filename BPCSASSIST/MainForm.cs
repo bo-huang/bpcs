@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,23 +93,43 @@ namespace BPCSASSIST
             uploadButton.Enabled = false;
             for (int i = 0; i < files.Count;++i )
             {
-                string file = files[i];
-                progressBar.Value = 0;
-                progressBar.Maximum = 100;
-                statusLabel.Text = "computing……";
-                bpcs.progressEvent = new BPCS.ProgressEventHander(Progress);
-                //先尝试利用秒传
-                //如果上传失败，很有可能是百度云上没有找到相同的文件
-                //这个时候用普通方式上传
-                bool ok = bpcs.RapidUpload(file);
-                if(!ok)
-                {    
-                    //普通方式上传
-                    statusLabel.Text = "0%";
-                    ok = bpcs.Upload(file);
+                string file = files[i];//也有可能是个文件夹
+                List<string> filesToUpload = new List<string>();
+                string uploadfolder = "";
+                if (System.IO.File.Exists(file))
+                    filesToUpload.Add(file);
+                else
+                {
+                    uploadfolder = System.IO.Path.GetFileName(file).Trim();
+                    DirectoryInfo folder = new DirectoryInfo(file);
+                    foreach(FileInfo fileInfo in folder.GetFiles())
+                    {
+                        filesToUpload.Add(fileInfo.FullName);
+                    }
                 }
-                if (!ok)
-                    MessageBox.Show(string.Format("{0} upload failed", System.IO.Path.GetFileName(file)));
+                for (int j = 0; j < filesToUpload.Count;++j )
+                {
+                    string _file = filesToUpload[j];
+                    progressBar.Value = 0;
+                    progressBar.Maximum = 100;
+                    statusLabel.Text = "computing……";
+                    bpcs.progressEvent = new BPCS.ProgressEventHander(Progress);
+
+                    //先尝试利用秒传
+                    //如果上传失败，很有可能是百度云上没有找到相同的文件
+                    //这个时候用普通方式上传
+                    bool ok = false;
+                    if(checkBox.Checked==true)//勾选了秒传
+                        ok = bpcs.RapidUpload(_file, uploadfolder);
+                    if (!ok)
+                    {
+                        //普通方式上传
+                        statusLabel.Text = "0%";
+                        ok = bpcs.Upload(_file, uploadfolder);
+                    }
+                    if (!ok)
+                        MessageBox.Show(string.Format("{0} upload failed", System.IO.Path.GetFileName(_file)));
+                }
                 DeleteListItem(file);
             }
             files.Clear();
@@ -166,7 +187,7 @@ namespace BPCSASSIST
                 String[] dragedFiles = e.Data.GetData(DataFormats.FileDrop, false) as String[];
                 foreach (string file in dragedFiles)
                 {
-                    if (System.IO.File.Exists(file))
+                    //if (System.IO.File.Exists(file))
                     {
                         files.Add(file);
                         AddFileToList(file);

@@ -40,6 +40,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.checkBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -146,12 +147,25 @@
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // checkBox
+            // 
+            this.checkBox.AutoSize = true;
+            this.checkBox.Checked = true;
+            this.checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox.Location = new System.Drawing.Point(140, 129);
+            this.checkBox.Name = "checkBox";
+            this.checkBox.Size = new System.Drawing.Size(90, 16);
+            this.checkBox.TabIndex = 9;
+            this.checkBox.Text = "second pass";
+            this.checkBox.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(350, 227);
+            this.Controls.Add(this.checkBox);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.listBox);
             this.Controls.Add(this.uploadButton);
@@ -191,6 +205,7 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripProgressBar progressBar;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.CheckBox checkBox;
     }
 }
 

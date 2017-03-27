@@ -93,13 +93,45 @@ namespace BPCSASSIST
         /// 暴力的把DefaultConnectionLimit改为100
         /// </summary>
         /// <param name="file"></param>
-        public bool Upload(string file)
+        /// 
+        //创建新目录
+        private bool CreateFolder(string folder)
+        {
+            string uri = host + "/pcs/file?method=mkdir&access_token=" + access_token+"&path="
+                + System.Web.HttpUtility.UrlEncode("/apps/UniDrive/" + folder, Encoding.UTF8);
+            try
+            {
+                HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
+                request.Method = "POST";
+                //request.KeepAlive = false;
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                        return true;
+                }
+                request = null;
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+        public bool Upload(string file,string folder)
         {
             //上传前先验证acce_token
             if (!isValidate())
                 return false;
             if (File.Exists(file))
             {
+                string path;
+                if (string.IsNullOrEmpty(folder))
+                    path = "/apps/UniDrive/";
+                else
+                {
+                    path = "/apps/UniDrive/"+folder+"/";
+                    CreateFolder(folder);
+                }
                 uploadSize = 0;
                 //获取文件大小
                 FileInfo fileInfo = new FileInfo(file);
@@ -170,7 +202,7 @@ namespace BPCSASSIST
                 if (ok)
                 {
                     string fileName = System.IO.Path.GetFileName(file).Trim();
-                    bool res = Merge(md5s, fileName);
+                    bool res = Merge(md5s, path+fileName);
                     while (res == false)
                     {
                         //提示是否重新合并
@@ -180,7 +212,7 @@ namespace BPCSASSIST
                             System.Windows.Forms.MessageBoxIcon.Information);
                         if (result == System.Windows.Forms.DialogResult.Yes)
                         {
-                            res = Merge(md5s, fileName);
+                            res = Merge(md5s, path + fileName);
                         }
                         else
                             break;
@@ -199,7 +231,7 @@ namespace BPCSASSIST
         private bool Merge(List<string> md5s, string path)
         {
             string uri = host + "/file?method=createsuperfile&ondup=newcopy&path="
-                + System.Web.HttpUtility.UrlEncode("/apps/UniDrive/" + path, Encoding.UTF8)
+                + System.Web.HttpUtility.UrlEncode(path, Encoding.UTF8)
                 + "&access_token=" + access_token;
             JObject jo = new JObject();
             JArray ja = new JArray();
@@ -339,13 +371,14 @@ namespace BPCSASSIST
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public bool RapidUpload(string file)
+        public bool RapidUpload(string file,string folder)
         {
             //上传前先验证acce_token
             if (!isValidate())
                 return false;
             if (!File.Exists(file))
                 return false;
+
             //获取文件大小
             FileInfo fileInfo = new FileInfo(file);
             fileLength = fileInfo.Length;
@@ -361,8 +394,13 @@ namespace BPCSASSIST
                         string content_md5 = GetMD5HashFromFile(file);
                         string slice_md5 = GetMD5HashFromArray(buffer);
                         string fileName = System.IO.Path.GetFileName(file);
-                        string uri = string.Format("{0}/pcs/file?method=rapidupload&ondup=newcopy&access_token={1}&content-length={2}&content-md5={3}&slice-md5={4}&path=%2fapps%2fUniDrive%2f{5}"
-                            ,host,access_token,fileLength,content_md5,slice_md5,fileName);
+                        string path;
+                        if (string.IsNullOrEmpty(folder))
+                            path = "/apps/UniDrive/";
+                        else
+                            path = "/apps/UniDrive/" + folder + "/";  
+                        string uri = string.Format("{0}/pcs/file?method=rapidupload&ondup=newcopy&access_token={1}&content-length={2}&content-md5={3}&slice-md5={4}&path="
+                            ,host,access_token,fileLength,content_md5,slice_md5,path+fileName);
                         HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
                         request.Method = "POST";
                         using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
